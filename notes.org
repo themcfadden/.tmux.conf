@@ -1,0 +1,820 @@
+* Org Mode (TAB to expand/fold/hide)
+** Basics
+- S-TAB and C-u TAB work globally on the document
+  - C-u C-u C-u TAB show all, including drawers
+- TAB to expand a section
+  - Folded -> Children -> Subtree --> back to start
+- Single asterisk for level 1 headline
+- Double asterisk for level 2. ...
+- Motion
+  - Next/Prev heading           : C-c C-n/C-c C-p
+  - Next/Prev heading same level: C-c C-f/C-c C-b
+  - Back to higher level heading: C-c C-u
+- Structue Editing
+  - Insert new          : M-RET
+  - Insert new TODO     : M-S-RET
+  - Promote/Demote item : M-left/M-right
+  - Promote/Demote tree : M-S-left/M-S-right
+  - Move tree           : M-S-up/down
+** Cleaner Outline view
+- org-indent-mode
+** Lists
+*** Unordered/Bullet lists: '- ', '+', '*'
+**** Continue      : M-RET
+**** Indent/Outdent: M-right/left
+**** Reorder       :M-up/down
+**** Change Type   :S-left/right, C-c -
+** Check Lists: '[ ]'
+*** Add next:      M-S-RET
+*** check/uncheck: C-c C-c
+*** Adding '[0/0]' to end of line tracks number of items
+** Numbered List: 1) or 1.
+    1. 
+    2. 
+** Description List
+*** Use '::' to separate term and description
+** Tables  
+*** Start, separate, and end with '|'
+*** Horizontal separator: '|-' + TAB
+*** Re-align            : TAB, RET, or C-c C-c in the table
+*** See info. There is a lot there
+*** Links
+**** '[[link][description ] ]'
+**** link can look like a URL,
+**** Exact name of heading,
+**** <<my-custom-id>>, or
+**** exact name of an element '#+NAME'
+**** Store Link : C-c l (org-store-link)
+**** Insert Link: C-c C-l (org-insert-link)
+**** Follow link: C-c C-o
+**** Pop Link   : C-c &
+  
+* TMUX
+==============================================================================
+** Sessions:   Collection of pseudo terminals managed by tmux.
+   Service accidental disconnection.
+   A Session holds one or more Windows which has Panes within them.
+** Windows:    The current screen, possibly divided into panes.
+** Panes:      Pseudo terminal, displayed as a division of a Window.
+   ---------------------------------------------------------------------------
+   Split top/bott: "
+   Split l/r:      %
+   Change to:      Up, Down, Left, Right
+   Break other:    ! (remove pane, make it a window)
+   break-pane -dP (other with info)
+   Break this:     @
+   Join:           join-pane -vs 1:2.0 (session:window.pane)
+   Join Horiz:     C-h
+   Join Vert:      C-v
+   Select other:   o
+   Back to last:   ;
+   Kill current:   x
+   exit at cli prompt
+   Swap prev:      {
+   Swap next:      }
+   Rotate:	        C-o
+   Display #'s:    q
+   Min/Max other:  z (Zoom toggle)
+   Next layout:    SPACE
+   Resize:         C-Up, etc. M-Up, etc (5x)
+
+** Relationships: 
+   Any number of tmux instances can connect to the same session and
+   any number of windows may be present in the same session. 
+** Status Line:       [session] Window List
+                   *: Current window
+                   -: The previous window
+
+** Config File:	~/.tmux.conf
+** Prefix:	        C-b
+** Command Prompt:	:
+** List keys:      ?
+** Show messages:  ~
+** Command Line
+---------------------------------------------------------------------------
+tmux ls:            Show (detached) sessions
+tmux attach -t #:   Attach to session #
+tmux new -s session-name: new with session-name
+
+** Windows (of sessions)
+---------------------------------------------------------------------------
+Split:          break-pane -dP
+Split Window:   " (vertical, creates pane)
+                % (horizontal, creates pane)
+Select Window:  '
+Choose Window:  w
+New Window:     c
+Next Window:    n
+Prev Window:    p
+Last Window:    l
+Select Window:  0 - 9
+Kill current:   &
+Rename current: ,
+Detach:         d
+
+** Panes
+
+* Screen
+==============================================================================
+New instance:    C-a c
+Next instance:   C-a n
+Prev instance:   C-a p
+Choose instance: C-a ", use cursor or session #
+                 C-a #, # = 0-9, for session #
+Split Screen:    C-a S, vertical split
+                 C-a |, horizontal split
+Move to window:  C-a TAB
+Delete window:   C-a X
+
+reattach:        screen -r <pid>
+
+* Git
+==============================================================================
+** Terms and Concepts
+---------------------------------------------------------------------------
+origin       : Is a remote repo (connection to the original repository).
+master       : Is a branch. It is the default branch.
+origin/master: refers to a local copy of the branch name "master" on the
+               remote named "origin"
+HEAD         : Current, active, "checked out" branch
+(*)          : on branch name shows current head.
+
+OrthAlign process:
+Master is the production "trunk". Only merges should be performed on
+the master. All work (feature development, bug fixes, etc.) are done
+on a the branch created for that purpose. When the work is done,
+the branch is merged into the master. All code merged into master
+must be tested, stable, and ready a release candidate.
+
+Most (90%) work happens in the local repository.
+
+** https://www.git-tower.com/learn/git/ebook/en/command-line/branching-merging/stashing#start
+
+** General Workflow
+---------------------------------------------------------------------------
+o Clone the repository
+  o git clone <repo> <distination dir>
+o Make a branch for the context you are working in
+  (feature, bug, release, etc).
+  Making a branch does not automatically make it active. You still need to
+  checkout the branch.
+  o git branch <branch name>
+  o git branch. To check branch name.
+  o git branch -a. To list all branches.
+o Fetch to update information about a remote
+  o git fetch <repo>
+o Checkout a branch
+  Makes named branch the current HEAD and updates local files as needed.
+  It can also track the relationship with the origin/master and notify
+  you if your local repo is ahead (you have local edit) or behind
+  (someone pushed changes to origin/master).
+  o git checkout --track <branch name>
+  o git checkout master. To go back to master/origin (aka trunk).
+o Add and modify files.
+  o git add -u (add modified, already tracked files)
+o Commit
+o Push
+  o git push, or git push -u origin <branch name>
+  Uploads new commits from local current HEAD branch to remote branch.
+
+o Merge or Create a pull request
+  For merging, remember that git merge merges branches, not individual commits.
+  o Check out branch to receive changes.
+  o git merge <branch name>. To merge the branch that has the changes
+    into the destination branch that will receive the changes.
+  For pull request
+  o From github, select Pull requests tab
+  o Click create new Pull request button and follow prompts.
+
+o Stash any incomplete work before branching if in existing repo
+  o git stash.
+  o git stash list. To see stashes
+  o git stash pop. To apply the newest stash (and clear from stash) to current
+    HEAD branch.
+  o get stash apply <stashname>. Applies named stash, keeps it in the stash.
+
+o git status
+
+** How To Cheat Sheet
+---------------------------------------------------------------------------
+- Clone the repository
+  o git clone <repo> <distination dir>
+- Update commit index with already known files.
+  Add known files to commit index.
+  o git add -u
+- List all branches
+  o git branch -a
+- Show remote repos associated with branch
+  o git remote -v
+- Show status of branch
+  o git status
+- Roll back updates so you can pull
+  - restore last commit. i.e. undo last edits (before commit)
+  o git checkout -- file/to/be/restored
+- Ignore local changes and update to latest from origin/master
+  o git checkout .
+  o git pull
+- Roll back to a commit. Resetting a branch.
+  o git reset --hard <hash>
+- Creating a new repository on a share drive
+  1. Create directory on the server.
+  2. In that directory, git init --bare.
+  3. In source directory, make sure it is a local git repository.
+     o git init
+     o git add .
+     o git commit
+  4. Add the remote to the local repo
+     o git remote add origin //PATH/TO/SERVER
+  5. Push local to remote and connect them
+     o git push --set-upstream origin master
+- Add a source directory to github.com as a new repo
+  1. Create repo on github.com
+  2. Initialize local directory as a repo.
+     o git init
+  3. Add github as remote origin
+     o git remote add origin https://github.com/themcfadden/bin.git
+     o check with git remote -v
+  4. git branch --set-upstream-to=origin/master
+  5. git pull origin master
+  6. git push
+- Duplicate a repository
+  1. git clone --mirror <upstream-repo>
+  2. cd <upstream-repo>
+  3. git push --mirror <new_upstream-repo>
+- Show config
+  o git config --list
+- Set CRLF for Windows work
+  o git config --global core.autocrlf true
+    - Always convert LF to CRLF when code is checked out
+    - git prefers to store files in LF format.
+- Ignore changes to file permissions
+  o git config core.fileMode false
+    - git to ignore changes in file permissions
+  
+** Command Summary
+---------------------------------------------------------------------------
+o git init --bare <directory name>
+  - Creates a new bare repository. Used as a central repository.
+  - Clone, add files to local, commit.
+o git clone ssh://user@host/path/to/repo.git
+  - Creates a local clone of the repository.
+  - This local copy is your 'origin'.
+  o git clone https://github.com/themcfadden/remotePanTilt
+o git status
+  - View state of local repository.
+o git log
+  - show commit history
+  - use -p to show detailed changes for each commit.
+o git add <some file>
+  - Stage a file for committing.
+o git commit -m "Check in message""
+  - Commit added files to local repository.
+o git push origin master --tags
+  - push local commits to central repository.
+  - Also push tags
+o git pull
+  - update from origin/master, automatically merge.
+o git pull --rebase origin master
+  - Pull down upstream changes from central repository to local.
+  - --rebase puts local commits on the tip of the master branch of the
+    local repository.
+o git add <some file>, then git rebase --continue
+  - After editing conflicts, use these commands.
+o git clean -d -f -x -n
+  - check which files would be cleaned and are not part of the git project.
+o git clean -d -f -x
+  - clean all file not part of the git project.
+o git remote -v
+  - Show remote servers configured.
+o git archive -o zipname.zip HEAD
+  git archive -o zipname.zip tag_name
+  - have git create a zip file from the HEAD or tag
+o git tag tag_name.
+  - lightweight tag.
+o git tag -a tag_name -m "tag message"
+  - annotated tag. Stores much more info.
+o git tag (-l reg expr)
+  - list tags
+  - use -l to search
+o git show tag_name
+  - show info on a tag
+o git config --global core.autocrlf true
+  - Always convert LF to CRLF when code is checked out
+  - git prefers to store files in LF format.
+o git config core.fileMode false
+  - git to ignore changes in file permissions
+o git checkout -- file/to/be/restored
+  - restore last commit. i.e. undo last edits (before commit)
+    
+* GitHub Workflow
+- Pull Requests
+* Tags
+==============================================================================
+o Create file that lists source files:
+  - find . -regex '.*\.\(c\|cpp\|h\)$' -print > gtags.files
+  - find . -type f -iname *\.c -o -iname *\.h > gtags.files
+o Create Tags database:
+  - from emacs:
+  - from CLI: ctags -e -L tagsfile.txt
+o Update Tags file:
+  -
+
+* GTags
+==============================================================================
+o Create file that lists source files:
+  - find . -regex '.*\.\(c\|cpp\|h\)$' -print > gtags.files
+  - find . -type f -iname *\.c -o -iname *\.h > gtags.files
+o Create gtags database.
+  - from emacs: ggtags-create-tags
+    This is preferred as it sets the project root
+    I usually say yes to the use ctags backend question.
+  - From the command line: gtags
+o Update gtags
+  - ggtags-update-tags
+    
+* Emacs
+==============================================================================
+Starting on PC                  Best from cygwin shell rvxt-native
+
+Capitalize                      M-c
+                                capitalize-word (first letter in word)
+
+Rectangle                       Kill:    C-x r k
+(column)                        Yank:    C-x r y
+                                Copy:    C-x r M-w
+                                Delete:  C-x r d
+                                Open:    C-x r o
+                                Text:    C-x r t <string> RET
+                                Numbers: C-x r N (prefix with C-u to set start)
+Yanking
+
+GTags                           ggtags-create-tags. Don't use ctags backend.
+                                ggtags-update-tags
+GTags find tag, prompted        C-u then ggtags command
+GTags Find Tag at point         M-.
+GTags Pop Mark                  M-*
+GTags Find Occurances           M-]
+                                M-p, M-n to navigate
+                                q to quit
+
+Jumping between Marks           C-<space> to mark. You an immediately do
+                                another to cancel highlight.
+                                C-u C-<space> to pop last mark.
+
+ELPA Package Manager            package-list-packages
+                                I mark for install
+                                X execute marks
+
+Install personal .emacs.d	git clone https://github.com/themcfadden/.emacs.d ~/.emacs.d
+
+Shrink/Grown Text Size          C-x C-+, C-x C--, C-x C-0
+
+Wrap, truncate text;            auto-fill-mode, visual-line-mode,
+                                M-q, fill-paragraph
+Set wrap column                 C-x f (set-fill-column)
+Line Wrap                       toggle-truncate-lines
+
+
+Tables                          table-capture
+                                use C-o or C-q C-j for new line delimiter.
+
+Interactive Highlighting        M-s h [r,u,p,.]
+
+
+Scroll to buffers together      scroll-all-mode
+
+Describe Key                    C-h c
+Describe Variable               C-h v. Also shows value.
+Describe Function               C-h f
+
+Set a variable                  (setq <variable-name> <value>)
+                                M-x set-variable
+
+Convert to Dos/Unix             C-x RET f
+                                set-buffer-file-coding-system utf-8-dos
+                                                              utf-8-unix
+                                                              utf-16-dos
+                                                              utf-16-unix
+
+C-mode offsets                  Check offset with C-c C-o, then add desired
+                                value to c-offsets-alist. Use C-h v c-offsets-alist
+                                for details.
+
+Selections deleted with text    delete-selection-mode
+
+Delete trailing white space     M-x delete-trailing-whitespace (entire buffer)
+
+Move to next c statement        M-a, M-e
+Move to first non-whitespc      M-m
+Move to begin of function       C-M-a, C-M-e
+Move to balanced expression     C-M-f, C-M-b, C-M-n, C-M-p
+
+Move past conditional           C-c C-n
+Move to top of conditional      C-c C-u. Leaves mark. (C-u C-<space> to return)
+                                M-x c-down-conditional-with-else
+
+Move to character               C-:, avy-goto-char
+                                C-', avy-goto-char-2
+
+Scroll other screen             C-M-v 
+                                C-M-S-v
+
+Backslash region                C-c C-\, c-backslash-region
+
+Select Word                     M-@. Moves mark to end of word. Can repeat for next word.
+
+Move to beginning of region     C-x C-x. After highlighting, keeps region and moves cursor
+                                to top of region.
+
+Calendar                        .   today
+                                x   mark holidays on calendar
+                                a   list holidays
+                                h   holidays at cursor
+                                M-= count days in region
+                                g d goto date
+                                C-n forward 1 week
+                                C-x < scroll 1 month forward
+                                C-v   scroll 3 months forward
+                                M-v   scroll 3 months back
+
+Remote Editing (via Tramp)      /host:filename
+                                /user@host:filename
+                                /method:user@host:filename
+                                /method:user@host#port:filename
+                                use C-x C-f C-f to get out of ido mode
+                                /method:user@host|sudo:user:/path/to/file
+
+ido mode                        C-b revert to old switch-buffer
+                                C-f revert to old find-file
+                                
+Make writable                   M-x toggle-read-only
+                                C-x C-q
+
+Force insert tab                C-Q tab
+                                M-i (tab-to-tab-stop)
+
+Count lines in region           M-= Also counts words, chars
+Count lines in buffer           count-words
+
+Show function                   M-x which-function-mode
+                                (which-function-mode 1) in .emacs
+
+Set terminal size               stty columns 80
+                                stty rows 80
+
+Enable scroll bars              scroll-bar-mode
+
+Repeat last command             C-x z z z (...)
+
+* Emacs Calc
+==============================================================================
+o C-x *, M-x calc       Start calc mode
+o d r <base>            Set display to <base> (Display Radix 2-36)
+o q                     Quit
+
+* Emacs GNUS (Mail)
+==============================================================================
+M-x gnus
+See https://github.com/redguardtoo/mastering-emacs-in-one-year-guide/blob/master/gnus-guide-en.org
+
+    C-u RET     : enter group and unhide all
+    m           : Create email message
+    C-c C-c     : send email message
+
+* Emacs Python
+==============================================================================
+o M-x pdb -> use: python -m pdb script.py
+o Use python-mode to turn python mode on (for now). Also elpy-enable.
+o realGUD
+  o M-x load-library RET realgud RET : to load
+  o M-x realgud                      : to run
+
+* Emacs Table Mode
+==============================================================================
+- Org mode is also a good option. Use turn-on-orgtbl for minor mode.
+
+| Command            | Key Stroke/Description |
+|--------------------+------------------------|
+| Recognize Table    | table-recognize        |
+|                    | table-recognize-region |
+|                    | table-recognize-table  |
+|                    |                        |
+|--------------------+------------------------|
+| Un-Recognize Table | table-unrecognize      |
+|                    |                        |
+|                    |                        |
+|                    |                        |
+|--------------------+------------------------|
+| Shrink/Expend Cell | C-c C-c > : Right      |
+|                    | C-c C-c < : Left       |
+|                    | C-c C-c { : Down       |
+|                    | C-c C-c } : Up         |
+|--------------------+------------------------|
+| Insert Row         |                        |
+|--------------------+------------------------|
+| Insert Column      |                        |
+|--------------------+------------------------|
+| Table Recognize    |                        |
+|--------------------+------------------------|
+
+* Emacs Links
+==============================================================================
+https://github.com/emacs-tw/awesome-emacs
+
+* TPP Notes
+  ---------------------------------------------------------------------------
+** Battery Power Monitoring:
+o upower
+o acpi
+o cat /sys/class/power_supply/BAT1
+   
+** WiFi Monitoring:
+o nmcli
+o iwconfig
+o /proc/net/wireless (watch -n 1 cat ...)
+  
+* Cygwin
+==============================================================================
+Preferred shell                 rxvt-native
+Pacakges to install
+        • Emacs-w32
+        • vim
+        • Dos2unix
+	• Tree
+	• Tmux
+	• Ascii
+	• Aspell
+	• Aspell-en
+	• Curl
+	• Wget
+	• Rxvt
+	• Make
+	• Clang
+	• Ncurses
+	• Libncurses-devel
+	• Ping
+	• cygcheck-dep
+	• cygutils
+	• ctags
+	• nc
+        • git
+        • zip, unzip
+        • ruby interpreter and docs
+        •
+
+* apt-get
+Elementary OS update everthing:
+o sudo apt-get update
+o sudo apt-get upgrade
+o sudo apt-get upgrade-dist
+* tar
+  ==============================================================================
+  Extract
+  - tar -xzvf file.tar.gz (or .tgz)
+    - x: extract
+    - v: verbose
+    - z: ungzip
+    - f: file name
+  
+    - t: list contents of archive
+    - c: create
+  
+  Create
+  tar -czvf file.tar.gz directory_to_tar_and_compress
+  
+* find
+  ==============================================================================
+  find, grep, pipes regualr expressions, bash
+  find . -type f -print0 | xargs -0 -e grep -n -e thing_to_search_for_in_files
+  find . -name *\.[ch] -print0 | xargs -0 -e grep -n -e thing_to_search_for
+  find . -type f -exec grep --color -nH -e $1 {} +
+  grep -r thing_to_search_in_files *\.[ch] 
+  ls -l | grep "\.txt$"
+  stderr to a file: grep * 2> grep-errors.txt
+  stdout to stderr: grep * 1>&2
+  stderr to stdout: grep * 2>&1
+  stderr & stdout to a file: ... &> /dev/null
+* grep, fgrep
+  ==============================================================================
+  - fgrep is grep -f: fixed strings, i.e. input pattern interpreted as
+    fixed - not having regular expressions.
+  - grep -r thing_to_search_in_files *\.[ch] 
+
+* GCC linker
+  ==============================================================================
+  ld (gcc' linker loader)
+  To see the default linker script, use the --verbose flag. This flag must be sent
+  to gcc via the -Wl command. Not the commas to pass multiple things to ld.
+  The -Map option after the -Wl will generate a map file.
+    - Wl, -Map,$(IMAGE).map,--verbose
+
+* Linker segments
+==============================================================================
+BSS, TEXT, DATA segments
+These are the traditional names of section of a memory map.
+BSS:  Block Started by Symbol. Reserved uninitialized memory (RAM). This is
+      sometimes zeroed in the crt (C Run Time).
+DATA: Reserved initialized memory. C's start code (crt) must copy initialized vars
+      from ROM to here.
+TEXT: Executable code goes here. Treated as read only memory.
+
+* Pointers
+==============================================================================
+far and huge pointers (in segmented architectures)
+far : pointers can address > 64K because the compiler knows to handle the DS too.
+huge: same as far, plus incrementing will increment the segment portion when
+      appropriate. Requires more overhead.
+
+* Sizeof convention
+==============================================================================
+• Number of elements in an array:
+	○ int a[123];
+	○ sizeof(a)/sizeof(a[0])
+• Number of bytes in an array:
+	○ int a[123];
+	○ Sizeof(a);
+	○ If an int is 4 bytes, then 68.
+
+* Endian
+==============================================================================
+Big Endian: MSByte in lower address. Consistent with english ordering of
+            numbers.
+            Easy to read in a debugger memory dump.
+            Networks are Big endian.
+
+* less
+==============================================================================
+Favorite options:
+   -M: long prompt, shows % in file, etc.
+   -i: ignore case on searches
+   -X: disable init and deinit of terminal, preventing the screen from being
+       cleared after displaying pages.
+
+* Serial Control Lines
+==============================================================================
+DTE: Data Terminal Equiptment      - The PC or Lantronix device.
+                                     Usually has DB9 male connector.
+DCE: Data Communication Equiptment - The device DTE is connected (like a modem).
+
+Symmetric, "RTS/CTS handshaking", DTE perspective
+RTS: Request To Send     (out) DTE can take data. HW flow control.
+   o RTS indicates permission from the DTE for the DCE to send data to the DTE.
+   o Tells DCE to prepare to accept data from DTE
+CTS: Clear To Send       (in)  DCE can take data. HW flow control.
+   o CTS indicates permission from the DCE for the DTE to send data to the DCE
+    (and is controlled by the DCE independent of RTS)
+   o Acknowledges RTS and allows DTE to transmit.
+
+DTR: Data Terminal Ready (out) DTE Ready. "I'm (DTE) ready."
+DSR: Data Set Ready      (in)  DCE Ready  (Modem is on)
+DCD: Data Carrier Detect (in)  DCE is connected
+                               (Modem is online, talking to someone)
+
+* Mac Homebrew
+==============================================================================
+o As of 20161114, brew seems to have better support over macports (or fink).
+o man brew
+o brew
+   - update
+   - upgrade
+   - outdated
+   - install
+
+* IRC
+==============================================================================
+o /server irc.irchighway.net. mattmc, flower
+  tigrlilly, 20flower flower
+o join #ebook
+o @search ....
+   o gives txt file with search results
+o use !.... as command
+o /list to list channels
+o mobi format works directly with Kindle
+
+* Emacs Everywhere (AutoHotKey to map keys in Windows)
+==============================================================================
+https://github.com/idf/EmacsEverywhere
+
+* Function Pointers
+==============================================================================
+  void function pointer:
+     void (*pF)(void) = null;
+  array of function pointers:
+     void (*pF[10])(void) = {null};
+  cast to a void function taking a void:
+     (void (*)(void))
+
+* Pointers to addresses
+==============================================================================
+
+* Typing Special Symbols
+==============================================================================
+Symbol           Windows                       Emacs
+------------------------------------------------------------------------------
+degree (°)       Alt 0176 (from number pad)    C-x 8 o, C-x 8 RET DEGREE SIGN
+bullet (•)                                     C-x 8 * *
+small bullet (·)                               C-x 8 .
+
+* Python
+==============================================================================
+** Virtual Environment
+------------------------------------------------------------------------------
+o http://docs.python-guide.org/en/latest/dev/virtualenvs/
+
+To set up
+----------
+1. pip install virtualenv
+2. cd to project folder
+3. virtualenv venv
+
+To Use
+----------
+4. source venv/bin/activate
+5. do normal python stuff
+6. deactivate
+
+* Xubuntu Config items
+==============================================================================
+Caps as Ctrl
+o edit /etc/default/keyboard, add
+  XKBOPTIONS="ctrl:nocaps" (separate additional with commas)
+  run sudo dpkg-reconfigure keyboard-configuration
+
+* Window 7 Alt Charater Codes
+** Hold Alt key while typing:
+--------------------------
+ASCII for signs 1-255
+Unicode for the rest;
+** Upper Case
+----------
+235 Ω omega
+
+** Lower Case
+----------
+945 α alfa
+946 β beta β
+947 γ gamma
+948 δ deltat
+949 ε epsilon
+950 ζ zeta
+951 η eta
+952 θ theta
+953 ι dugg
+954 κ Kappa
+955 λ lambda λ
+956 μ mu
+957 ν nu
+958 ξ xi
+959 ο Omicron
+960 π pi
+961 ρ rho
+962 ς sigma (slutet av ordet)
+963 σ sigma (någon annanstans)
+964 τ tau
+965 υ Upsilon
+966 φ phi
+967 χ chi
+968 ψ psi
+969 ω omega
+
+** Other
+0176 ° Degree
+
+* Paste Notes
+==============================================================================
+/mattmc@tpp-laptop.orthalign.local:/home/mattmc/projects/tpp
+
+* Alaska Trip Notes
+** http://advrider.com/index.php?threads/tewsters-traveling-circus-alaska-2017.1231655/
+** https://spotwalla.com
+** Good Tires:
+*** Front: Metzeler Karoo 3 Tire - Front - 90/90-21
+*** Rear: Mitas Dual Sport E-07 150/70-18 70T
+** Current Tires:
+*** Front: 
+*** Rear:  
+** Tools:
+*** 22mm and 27mm wrench
+*** Rear wheel and shock
+*** Ratchet end, 15mm, 14mm, 13, 12, 10, 8 and 6
+*** Needle nose pliers
+*** Bull nosed pliers, with snip
+*** 3/8 socket wrench (less important)
+*** extension (less important)
+*** 3/8 T Handle socket wrench
+*** sockets: 10 - 15, 18mm
+*** hex head sockets: 4, 5, 6, 8mm
+*** vise grips
+** Clothes
+*** Wool and synthetic socks (ski socks)
+*** Klim gear, 
+*** a pair of jeans, 
+*** heated Gerbing jacket, 
+*** fleece pullover
+*** Two long sleeve Merino T's
+*** One Merino short sleeve T
+*** Two pairs of LD Comfort riding shorts
+*** Two pairs of Smartwool Merino socks
+*** One pair of Smartwool shorts with Merino underwear built in for sleeping/lounging
+*** One set of 250 weight Merino wool base layer top and bottoms for cold/sleeping
+
