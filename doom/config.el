@@ -82,6 +82,10 @@
 (map! "<kp-subtract>" #'kill-whole-line)
 (map! "<kp-multiply>" #'yank)
 
+(map! "<f12> b" #'switch-to-buffer)
+(map! "<f12> f" #'find-file)
+(map! "<f12> g" #'keyboard-quit)
+(map! "<f12> s" #'save-buffer)
 
 ;;  copy-line
 ;;====================================================================
