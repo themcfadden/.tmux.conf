@@ -130,3 +130,14 @@
     ;;org-superstar-headline-bullets-list '("»")
     org-superstar-headline-bullets-list '("•")
 )
+
+(dolist (fn '(definition references))
+  (fset (intern (format "+lookup/%s-other-window" fn))
+        (lambda (identifier &optional arg)
+          "TODO"
+          (interactive (list (doom-thing-at-point-or-region)
+                             current-prefix-arg))
+          (let ((pt (point)))
+            (switch-to-buffer-other-window (current-buffer))
+            (goto-char pt)
+            (funcall (intern (format "+lookup/%s" fn)) identifier arg)))))
