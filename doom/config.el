@@ -87,6 +87,10 @@
 (map! "<f12> g" #'keyboard-quit)
 (map! "<f12> s" #'save-buffer)
 
+;; Sample jar configuration
+(setq plantuml-jar-path "/Users/mattmc/bin/plantuml.jar")
+(setq plantuml-default-exec-mode 'jar)
+
 ;;  copy-line
 ;;====================================================================
 ;;(defun copy-line (&optional arg)
