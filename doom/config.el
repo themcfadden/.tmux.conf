@@ -135,6 +135,7 @@
     org-superstar-headline-bullets-list '("•")
 )
 
+;; blind lookup in other window
 (dolist (fn '(definition references))
   (fset (intern (format "+lookup/%s-other-window" fn))
         (lambda (identifier &optional arg)
@@ -145,3 +146,6 @@
             (switch-to-buffer-other-window (current-buffer))
             (goto-char pt)
             (funcall (intern (format "+lookup/%s" fn)) identifier arg)))))
+
+(setq mac-option-modifier nil
+      mac-command-modifier 'meta)
